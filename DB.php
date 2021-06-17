@@ -18,6 +18,10 @@ class DB
         }
     }
 
+    public function __deconstruct() {
+        $this->connection->close();
+    }
+
     public function &getTable() {
         $sql = "SELECT * FROM comments";
         $result = $this->connection->query($sql);
@@ -27,5 +31,26 @@ class DB
         }
 
         return $this->table;
+    }
+
+    public function addEntry($entry) {
+        $name = $this->connection->real_escape_string(@$entry['name']);
+        $message = $this->connection->real_escape_string(@$entry['message']);
+
+        $sql = "INSERT INTO comments (name, message) VALUES ('$name', '$message')";
+
+        if ($this->connection->query($sql) === TRUE) {
+            echo "New record created successfully";
+
+            $this->table[$this->connection->insert_id] = [
+                'name' => $name,
+                'message' => $message
+            ];
+
+        } else {
+            echo "Error: " . $sql . "<br>" . $this->connection->error;
+        }
+
+
     }
 }

@@ -21,10 +21,9 @@
         array_key_exists('message', $_POST) &&
         array_key_exists('name', $_POST)
     ) {
-        $storage->addEntry([
+        $db->addEntry([
             'name' => $_POST['name'],
-            'message' => $_POST['message'],
-            'time' => time()
+            'message' => $_POST['message']
         ]);
     }
 
